@@ -44,7 +44,7 @@
                     <div class="card-body">
                         <h2 class="card-title">Interview</h2>
                         <!-- interviewd job -->
-                        <p id="interview-job" class="text-2xl font-bold text-[#10b981]">0</p>
+                        <p id="interview-id" class="text-2xl font-bold text-[#10b981]">0</p>
                     </div>
                 </div>
                 <div class="card w-96 bg-base-100 card-xs shadow-sm p-3">
@@ -59,7 +59,7 @@
 
         <hr class="my-[30px] text-[#e6e7e9]">
 
-        <section >
+        <section>
             <div class=" pb-[20px] flex items-center justify-between">
                 <h1 class="text-xl font-bold text-[#002c5c]">Available Jobs</h1>
                 <span>8 Jobs</span>
@@ -87,15 +87,17 @@
                                 </div>
                             </div>
                             <p class="text-[14px] text-[#64748b] mt-[20px]">Remote • Full-time • $130,000 - $175,000</p>
-                            <div
-                                class="px-3 py-2 bg-[#eef4ff] text-[#002c5c] font-medium w-28 h-9 flex justify-center items-center">
-                                NOT APPLIED</div>
+                            <div id="j1">
+                                <div 
+                                    class="px-3 py-2 bg-[#eef4ff] text-[#002c5c] font-medium w-28 h-9 flex justify-center items-center">
+                                    NOT APPLIED</div>
+                            </div>
                             <p class="text-[#323b49] text-[14px]">Build cross-platform mobile applications using React
                                 Native. Work on products used by millions of users worldwide.</p>
                             <div class="flex gap-[10px]">
-                                <button
+                                <button onclick="interviewSelect('j1')"
                                     class="btn text-[14px] font-semibold text-[#10b981] border-[2px] border-[#10b981] hover:bg-[#10b981] hover:text-[#eef4ff]">INTERVIEW</button>
-                                <button
+                                <button onclick="rejectJob('j1')"
                                     class="btn btn text-[14px] font-semibold text-[#ef4444] border-[2px] border-[#ef4444] hover:bg-[#ef4444] hover:text-[#eef4ff]">REJECTED</button>
                             </div>
                         </div>
@@ -138,6 +140,7 @@
         </section>
     </main>
     <script src="./script.js"></script>
+    <script src="./tools.js"></script>
 </body>
 
 </html>
