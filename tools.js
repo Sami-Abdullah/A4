@@ -1,77 +1,4 @@
 
-let rejectCount = 0;
-
-function getvalue(id) {
-  return Number(document.getElementById(id).innerText)
-}
-function setValue(id, value) {
-  document.getElementById(id).innerText = value
-}
-
-
-function interviewSelect(id) {
-  const statusBadge = document.getElementById(id)
-  let x = 1;
-  if (statusBadge.classList.contains('rejected')) {
-    const value = getvalue("rejected-id");
-    setValue("rejected-id", value - 1);
-    statusBadge.classList.remove("rejected")
-
-    x = 0;
-  }
-  if (statusBadge.classList.contains("applied")) {
-    return;
-  }
-  statusBadge.classList.add("applied")
-  statusBadge.innerHTML = `
-  <div 
-    class="px-3 py-2 
-    font-medium w-28 h-9 flex justify-center items-center
-    border-[#10b981] bg-[#10b981] text-[#eef4ff] ">
-    APPLIED
-  </div>
-    `
-
-  const interviewed = getvalue("interview-id")
-
-  setValue("interview-id", interviewed + 1)
-
-  const total = getvalue("total-job");
-  setValue("total-job", total - x)
-
-}
-
-function rejectJob(id) {
-  const statusBadge = document.getElementById(id)
-  let x = 1;
-  if (statusBadge.classList.contains('applied')) {
-    const value = getvalue("interview-id");
-    setValue("interview-id", value - 1);
-
-    statusBadge.classList.remove("applied")
-    x = 0;
-  }
-  if (statusBadge.classList.contains("rejected")) {
-    return;
-  }
-  statusBadge.classList.add("rejected")
-  statusBadge.innerHTML = `
-  <div 
-    class="px-3 py-2 
-    font-medium w-28 h-9 flex justify-center items-center
-    border-[#ef4444] bg-[#ef4444] text-[#eef4ff] ">
-    REJECT
-  </div>
-    `
-
-  const interviewed = getvalue("rejected-id")
-
-  setValue("rejected-id", interviewed + 1)
-
-  const total = getvalue("total-job");
-  setValue("total-job", total - x)
-}
-
 let jobs = [
   {
     id: "j1",
@@ -154,3 +81,125 @@ let jobs = [
     description: "Lead product strategy for a high-growth fintech platform. Collaborate with engineering and design to deliver impact."
   }
 ];
+
+function getvalue(id) {
+  return Number(document.getElementById(id).innerText)
+}
+function setValue(id, value) {
+  document.getElementById(id).innerText = value
+}
+
+
+function interviewSelect(id) {
+  const statusBadge = document.getElementById(id)
+  let x = 1;
+  if (statusBadge.classList.contains("rejected")) {
+    const value = getvalue("rejected-id");
+    setValue("rejected-id", value - 1);
+    statusBadge.classList.remove("rejected")
+
+    x = 0;
+  }
+  if (statusBadge.classList.contains("applied")) {
+    return;
+  }
+  statusBadge.classList.add("applied")
+  statusBadge.innerHTML = `
+  <div 
+    class="px-3 py-2 
+    font-medium w-28 h-9 flex justify-center items-center
+    border-[#10b981] bg-[#10b981] text-[#eef4ff] ">
+    APPLIED
+  </div>
+    `
+
+  const interviewed = getvalue("interview-id")
+
+  setValue("interview-id", interviewed + 1)
+
+  const total = getvalue("total-job");
+  setValue("total-job", total - x)
+
+}
+
+function rejectJob(id) {
+  const statusBadge = document.getElementById(id)
+  let x = 1;
+  if (statusBadge.classList.contains("applied")) {
+    const value = getvalue("interview-id");
+    setValue("interview-id", value - 1);
+
+    statusBadge.classList.remove("applied")
+    x = 0;
+  }
+  if (statusBadge.classList.contains("rejected")) {
+    return;
+  }
+  statusBadge.classList.add("rejected")
+  statusBadge.innerHTML = `
+  <div 
+    class="px-3 py-2 
+    font-medium w-28 h-9 flex justify-center items-center
+    border-[#ef4444] bg-[#ef4444] text-[#eef4ff] ">
+    REJECT
+  </div>
+    `
+
+  const interviewed = getvalue("rejected-id")
+
+  setValue("rejected-id", interviewed + 1)
+
+  const total = getvalue("total-job");
+  setValue("total-job", total - x)
+}
+
+function deleteJob(id) {
+  let newJob = []
+  for (let job in jobs) {
+    if (job.id !== id) {
+      newJob.push(job);
+    }
+  }
+  jobs = newJob;
+  setValue("num-jobs", jobs.length);
+}
+
+function renderAll() {
+  const HTML = document.getElementById("render-main");
+  let mainHTML =""
+  for (let job of jobs) {
+    mainHTML += `
+          <div class="card w-full bg-base-100 card-xs shadow-sm p-3 ">
+          <div class="card-body">
+              <div class="flex justify-between items-center ">
+                  <div>
+                      <h2 class="text-[18px] text-[#002c5c] font-semibold">${job.company}</h2>
+                      <p class="text-[16px] text-[#64748b]">${job.role}</p>
+                  </div>
+                  <div>
+                      <button onclick="deleteJob('${job.id}')" class="btn border border-[#f1f2f4] rounded-full px-[10px] py-[9px]  "><i
+                              class="fa-regular fa-trash-can text-[#64748b]"></i></button>
+                  </div>
+              </div>
+              <p class="text-[14px] text-[#64748b] mt-[20px]">${job.location} • ${job.type} • ${job.salary}</p>
+              <div id='${job.id}'>
+                  <div 
+                      class="px-3 py-2 bg-[#eef4ff] text-[#002c5c] font-medium w-28 h-9 flex justify-center items-center">
+                      NOT APPLIED</div>
+              </div>
+              <p class="text-[#323b49] text-[14px]">${job.description}</p>
+              <div class="flex gap-[10px]">
+                  <button onclick="interviewSelect('${job.id}')"
+                      class="btn text-[14px] font-semibold text-[#10b981] border-[2px] border-[#10b981] hover:bg-[#10b981] hover:text-[#eef4ff]">INTERVIEW</button>
+                  <button onclick="rejectJob('${job.id}')"
+                      class="btn btn text-[14px] font-semibold text-[#ef4444] border-[2px] border-[#ef4444] hover:bg-[#ef4444] hover:text-[#eef4ff]">REJECTED</button>
+              </div>
+          </div>
+      </div>
+    `
+  }
+  HTML.innerHTML=mainHTML
+}
+renderAll()
+
+
