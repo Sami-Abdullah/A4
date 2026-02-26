@@ -81,7 +81,8 @@ let jobs = [
     description: "Lead product strategy for a high-growth fintech platform. Collaborate with engineering and design to deliver impact."
   }
 ];
-
+let appliedArray = [];
+let rejectArray = [];
 function getvalue(id) {
   return Number(document.getElementById(id).innerText)
 }
@@ -90,19 +91,28 @@ function setValue(id, value) {
 }
 
 
+
 function interviewSelect(id) {
   const statusBadge = document.getElementById(id)
   let x = 1;
-  if (statusBadge.classList.contains("rejected")) {
-    const value = getvalue("rejected-id");
-    setValue("rejected-id", value - 1);
-    statusBadge.classList.remove("rejected")
-
-    x = 0;
-  }
   if (statusBadge.classList.contains("applied")) {
     return;
   }
+  if (statusBadge.classList.contains("rejected")) {
+    setValue("rejected-id", getvalue("rejected-id") - 1);
+    statusBadge.classList.remove("rejected")
+    x = 0;
+  }
+
+  for (let job of jobs) {
+    if (job.id === id) {
+      job.status = "APPLIED"
+      appliedArray.push(job)
+      rejectArray = rejectArray.filter(job => job.id !== id)
+    }
+  }
+
+
   statusBadge.classList.add("applied")
   statusBadge.innerHTML = `
   <div 
@@ -110,63 +120,82 @@ function interviewSelect(id) {
     font-medium w-28 h-9 flex justify-center items-center
     border-[#10b981] bg-[#10b981] text-[#eef4ff] ">
     APPLIED
-  </div>
-    `
+  </div> `
 
-  const interviewed = getvalue("interview-id")
+  setValue("interview-id", appliedArray.length)
 
-  setValue("interview-id", interviewed + 1)
 
-  const total = getvalue("total-job");
-  setValue("total-job", total - x)
+  renderAll(appliedArray, "yes-jobs")
+  renderAll(rejectArray, "yes-reject")
+    if(rejectArray.length===0){
+    document.getElementById("not-available-sec").classList.remove("hidden")
+  }
 
 }
 
 function rejectJob(id) {
   const statusBadge = document.getElementById(id)
   let x = 1;
-  if (statusBadge.classList.contains("applied")) {
-    const value = getvalue("interview-id");
-    setValue("interview-id", value - 1);
-
-    statusBadge.classList.remove("applied")
-    x = 0;
-  }
   if (statusBadge.classList.contains("rejected")) {
     return;
   }
+  if (statusBadge.classList.contains("applied")) {
+
+    setValue("interview-id", getvalue("interview-id") - 1);
+    statusBadge.classList.remove("applied")
+    x = 0;
+  }
+  for (let job of jobs) {
+    if (job.id === id) {
+      job.status = "REJECTED"
+      rejectArray.push(job);
+      appliedArray = appliedArray.filter(job => job.id !== id)
+    }
+  }
   statusBadge.classList.add("rejected")
-  statusBadge.innerHTML = `
-  <div 
+  statusBadge.innerHTML =
+    `
+    <div 
     class="px-3 py-2 
     font-medium w-28 h-9 flex justify-center items-center
     border-[#ef4444] bg-[#ef4444] text-[#eef4ff] ">
     REJECT
-  </div>
-    `
+    </div>
+  `
 
-  const interviewed = getvalue("rejected-id")
+  setValue("rejected-id", rejectArray.length)
 
-  setValue("rejected-id", interviewed + 1)
 
-  const total = getvalue("total-job");
-  setValue("total-job", total - x)
+
+  renderAll(appliedArray, "yes-jobs")
+  renderAll(rejectArray, "yes-reject")
+  console.log(appliedArray.length)
+
+  if(appliedArray.length===0){
+    document.getElementById("not-available-sec").classList.remove("hidden")
+  }
 }
 
 function deleteJob(id) {
-  let newJob = []
-  for (let job in jobs) {
-    if (job.id !== id) {
-      newJob.push(job);
-    }
-  }
-  jobs = newJob;
+
+  jobs = jobs.filter(job => job.id !== id);
+  appliedArray = appliedArray.filter(job => job.id !== id);
+  rejectArray = rejectArray.filter(job => job.id !== id);
+  console.log(jobs)
   setValue("num-jobs", jobs.length);
+  setValue("total-job", jobs.length);
+  renderAll(jobs, "render-main");
+  renderAll(appliedArray, "yes-jobs")
+  setValue("interview-id", appliedArray.length)
+
+  renderAll(rejectArray, "yes-reject")
+  setValue("rejected-id", rejectArray.length)
+
 }
 
-function renderAll() {
-  const HTML = document.getElementById("render-main");
-  let mainHTML =""
+function renderAll(jobs, placetoRender) {
+  const HTML = document.getElementById(placetoRender);
+  let mainHTML = ""
   for (let job of jobs) {
     mainHTML += `
           <div class="card w-full bg-base-100 card-xs shadow-sm p-3 ">
@@ -176,17 +205,42 @@ function renderAll() {
                       <h2 class="text-[18px] text-[#002c5c] font-semibold">${job.company}</h2>
                       <p class="text-[16px] text-[#64748b]">${job.role}</p>
                   </div>
-                  <div>
+                  ${placetoRender !== "yes-jobs" && placetoRender !== "yes-reject" ? `<div>
                       <button onclick="deleteJob('${job.id}')" class="btn border border-[#f1f2f4] rounded-full px-[10px] py-[9px]  "><i
                               class="fa-regular fa-trash-can text-[#64748b]"></i></button>
-                  </div>
+                  </div>`: ""
+      }                 
               </div>
+
               <p class="text-[14px] text-[#64748b] mt-[20px]">${job.location} • ${job.type} • ${job.salary}</p>
-              <div id='${job.id}'>
+<div id='${job.id}'>
+              ${placetoRender === "render-main" ?
+        `                   
                   <div 
-                      class="px-3 py-2 bg-[#eef4ff] text-[#002c5c] font-medium w-28 h-9 flex justify-center items-center">
-                      NOT APPLIED</div>
-              </div>
+                        class="px-3 py-2 bg-[#eef4ff] text-[#002c5c] font-medium w-28 h-9 flex justify-center items-center">
+                        NOT APPLIED
+                  </div>
+                `
+        : placetoRender === "yes-jobs" ?
+          `
+                <div 
+                  class="px-3 py-2 
+                  font-medium w-28 h-9 flex justify-center items-center
+                  border-[#10b981] bg-[#10b981] text-[#eef4ff] ">
+                  APPLIED
+                </div>
+                `
+          : placetoRender === "yes-reject" ?
+            `
+                  <div 
+                    class="px-3 py-2 
+                    font-medium w-28 h-9 flex justify-center items-center
+                    border-[#ef4444] bg-[#ef4444] text-[#eef4ff] ">
+                    REJECT
+                  </div>
+                `: ``
+      }
+</div>
               <p class="text-[#323b49] text-[14px]">${job.description}</p>
               <div class="flex gap-[10px]">
                   <button onclick="interviewSelect('${job.id}')"
@@ -198,8 +252,7 @@ function renderAll() {
       </div>
     `
   }
-  HTML.innerHTML=mainHTML
+  HTML.innerHTML = mainHTML
 }
-renderAll()
-
+renderAll(jobs, "render-main");
 
