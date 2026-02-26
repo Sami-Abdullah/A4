@@ -67,3 +67,6 @@ rejectedBtn.addEventListener("click", function () {
   yesJob.classList.add("hidden")
   allJobList.classList.add("hidden")
 })
+
+
+yesJob.appendChild
