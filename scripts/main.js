@@ -33,18 +33,21 @@ interviewBtn.addEventListener("click", function () {
   rejectedBtn.classList.remove("btn-primary")
   allBtn.classList.remove("btn-primary")
 
-  
+
 
   if (appliedArray.length > 0) {
+    console.log("here3")
 
     yesJob.classList.remove("hidden")
     notAviableSec.classList.add("hidden");
   } else {
+    console.log("here4")
+
     yesJob.classList.add("hidden")
     notAviableSec.classList.remove("hidden");
     console.log("here")
   }
-  
+
   yesReject.classList.add("hidden")
   allJobList.classList.add("hidden")
 })
@@ -55,11 +58,14 @@ rejectedBtn.addEventListener("click", function () {
   rejectedBtn.classList.add("btn-primary")
   allBtn.classList.remove("btn-primary")
 
-  
+
   if (rejectArray.length > 0) {
+    console.log("here1")
     yesReject.classList.remove("hidden")
     notAviableSec.classList.add("hidden");
   } else {
+    console.log("here2")
+
     yesReject.classList.add("hidden")
     notAviableSec.classList.remove("hidden");
   }
@@ -68,5 +74,3 @@ rejectedBtn.addEventListener("click", function () {
   allJobList.classList.add("hidden")
 })
 
-
-yesJob.appendChild

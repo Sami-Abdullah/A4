@@ -123,11 +123,14 @@ function interviewSelect(id) {
   </div> `
 
   setValue("interview-id", appliedArray.length)
-
+  
 
   renderAll(appliedArray, "yes-jobs")
   renderAll(rejectArray, "yes-reject")
-    if(rejectArray.length===0){
+  
+  const allBtn = document.getElementById("all-btn");
+  console.log(rejectArray.length ,allBtn.classList.contains("btn-primary"))
+  if (rejectArray.length === 0 &&!allBtn.classList.contains("btn-primary")) {
     document.getElementById("not-available-sec").classList.remove("hidden")
   }
 
@@ -169,9 +172,9 @@ function rejectJob(id) {
 
   renderAll(appliedArray, "yes-jobs")
   renderAll(rejectArray, "yes-reject")
-  console.log(appliedArray.length)
-
-  if(appliedArray.length===0){
+  const allBtn = document.getElementById("all-btn");
+  
+  if (appliedArray.length === 0 &&!allBtn.classList.contains("btn-primary")) {
     document.getElementById("not-available-sec").classList.remove("hidden")
   }
 }
